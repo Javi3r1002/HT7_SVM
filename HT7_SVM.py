@@ -319,3 +319,77 @@ for row in H['SalePrice']:
     	print('dndofinoid')
 H['Categoria'] = Cate
 H = H.drop(['SalePrice'], axis = 1)
+
+print(H.groupby('Categoria').size())
+H['Categoria'] = H['Categoria'].astype('category')
+
+
+y = H.pop("Categoria") #La variable respuesta
+X = H #El resto de los datos
+
+random.seed(123)
+
+X_train, X_test,y_train, y_test = train_test_split(X, y,test_size=0.3,train_size=0.7, random_state = 123)
+
+#Modelo 1: Se utilizan todos los parámetros en default
+
+clf_svm = SVC(random_state=123)
+start = timeit.default_timer()
+clf_svm.fit(X_train,y_train)
+end = timeit.default_timer()
+print('Tiempo de Fit para el modelo con los parámetros default: ',  end-start)
+
+y_predf = clf_svm.predict(X_train)
+start = timeit.default_timer()
+y_pred = clf_svm.predict(X_test)
+end = timeit.default_timer()
+print('Tiempo de predict del modelo con los parámetros default: ',  end-start)
+cm = confusion_matrix(y_test,y_pred)
+print ("Accuracy entrenamiento para el modelo con los parámetros default:",metrics.accuracy_score(y_train, y_predf))
+print ("Accuracy para el modelo con los parámetros default:",metrics.accuracy_score(y_test, y_pred))
+print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Matriz de confusión del modelo con los parámetros default", '\n',cm)
+
+
+
+
+#Modelo 2: Se utiliza un kernel poly con un grado de 3
+clf_svm = SVC(kernel = 'poly', degree = 3, random_state=123)
+start = timeit.default_timer()
+clf_svm.fit(X_train,y_train)
+end = timeit.default_timer()
+print('Tiempo de Fit para el modelo con un kernel poly y un grado 3: ',  end-start)
+
+y_predf = clf_svm.predict(X_train)
+start = timeit.default_timer()
+y_pred = clf_svm.predict(X_test)
+end = timeit.default_timer()
+print('Tiempo de predict del modelo con un kernel poly y un grado 3: ',  end-start)
+cm = confusion_matrix(y_test,y_pred)
+print ("Accuracy entrenamiento para el modelo con un kernel poly y un grado 3:",metrics.accuracy_score(y_train, y_predf))
+print ("Accuracy para el modelo con un kernel poly y un grado 3:",metrics.accuracy_score(y_test, y_pred))
+print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Matriz de confusión del modelo con un kernel poly y un grado 3", '\n',cm)
+
+#Modelo 3: Se varía el valor de C
+clf_svm = SVC(C = .01, random_state=123)
+start = timeit.default_timer()
+clf_svm.fit(X_train,y_train)
+end = timeit.default_timer()
+print('Tiempo de Fit para el modelo con un kernel poly y un grado 3: ',  end-start)
+
+y_predf = clf_svm.predict(X_train)
+start = timeit.default_timer()
+y_pred = clf_svm.predict(X_test)
+end = timeit.default_timer()
+print('Tiempo de predict del modelo con un valor de C de .01: ',  end-start)
+cm = confusion_matrix(y_test,y_pred)
+print ("Accuracy entrenamiento para el modelo con un valor de C de .01:",metrics.accuracy_score(y_train, y_predf))
+print ("Accuracy para el modelo con un valor de C de .01:",metrics.accuracy_score(y_test, y_pred))
+print ("Precision:", metrics.precision_score(y_test,y_pred,average='weighted') )
+print ("Recall: ", metrics.recall_score(y_test,y_pred,average='weighted'))
+print("Matriz de confusión del modelo con un valor de C de .01", '\n',cm)
+
+# Se dejaron de eliminar las variables ,'TotalBsmtSF','1stFlrSF',
